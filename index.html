@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+      background-color: #e6f0ff;
+    }
+    h1 {
+      font-size: 48px;
+      color: #0088cc;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 18px;
+      color: #333;
+      margin: 5px 0;
+    }
+    .countdown {
+      font-size: 24px;
+      font-weight: bold;
+      color: #cc0000;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="timeDisplay">--:--:--</h1>
+  <p id="platformInfo">Detecting platform...</p>
+  <p>Redirecting in <span id="countdown" class="countdown">3</span> seconds...</p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get("target");
+
+    const isTelegram = navigator.userAgent.toLowerCase().includes("telegram");
+    const now = new Date();
+    const offsetTime = isTelegram ? new Date(now.getTime() - 10000) : now;
+
+    const hours = offsetTime.getHours().toString().padStart(2, '0');
+    const minutes = offsetTime.getMinutes().toString().padStart(2, '0');
+    const seconds = offsetTime.getSeconds().toString().padStart(2, '0');
+
+    document.getElementById("timeDisplay").textContent = `${hours}:${minutes}:${seconds}`;
+    document.getElementById("platformInfo").textContent = `Opened via ${isTelegram ? "Telegram" : "Browser"}`;
+
+    let countdown = 3;
+    const countdownEl = document.getElementById("countdown");
+    const interval = setInterval(() => {
+      countdown--;
+      countdownEl.textContent = countdown;
+      if (countdown === 0) {
+        clearInterval(interval);
+        if (target) window.location.href = target;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
